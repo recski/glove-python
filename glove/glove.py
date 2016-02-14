@@ -3,6 +3,7 @@
 import array
 import collections
 import io
+import sys
 try:
     # Python 2 compat
     import cPickle as pickle
@@ -245,10 +246,14 @@ class Glove(object):
         vectors = array.array('d')
 
         # Read in the data.
-        with io.open(filename, 'r', encoding='utf-8') as savefile:
+        with open(filename) as savefile:
             for i, line in enumerate(savefile):
-                tokens = line.split(' ')
-
+                try:
+                    tokens = line.decode('utf-8').split(' ')
+                except:
+                    sys.stderr.write(
+                        "error on line {0}, skipping\n".format(i+1))
+                    continue
                 word = tokens[0]
                 entries = tokens[1:]
 
